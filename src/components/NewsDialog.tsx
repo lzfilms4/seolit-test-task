@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
-import { useNewsStore, NewsItem } from "../store/news.store"
+
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
 import {
     Dialog,
     DialogContent,
@@ -10,18 +11,21 @@ import {
     DialogFooter,
 } from "./ui/dialog"
 
+import { NewsItem } from "@/store/news.store"
+
 interface NewsDialogProps {
     newsItem: NewsItem | null | undefined
     isOpen: boolean
+    onSubmit: (title: string, content: string) => void
     onClose: () => void
 }
 
 export default function NewsDialog({
     newsItem,
     isOpen,
+    onSubmit,
     onClose,
 }: NewsDialogProps) {
-    const { addNews, updateNews } = useNewsStore()
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
 
@@ -39,11 +43,7 @@ export default function NewsDialog({
         e.preventDefault()
         if (!title.trim() || !content.trim()) return
 
-        if (newsItem) {
-            updateNews(newsItem.id, title, content)
-        } else {
-            addNews(title, content)
-        }
+        onSubmit(title, content)
 
         setTitle("")
         setContent("")
@@ -84,12 +84,12 @@ export default function NewsDialog({
                             >
                                 Содержание
                             </label>
-                            <textarea
+                            <Textarea
                                 id="content"
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 placeholder="Введите содержание новости"
-                                className="w-full min-h-[120px] px-3 py-2 border rounded-md resize-none"
+                                className="w-full h-[120px] px-3 py-2 border rounded-md resize-none"
                                 required
                             />
                         </div>

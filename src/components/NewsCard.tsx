@@ -1,4 +1,5 @@
-import { NewsItem } from "../store/news.store"
+import { NewsItem } from "@/store/news.store"
+
 import { Button } from "./ui/button"
 import {
     Card,

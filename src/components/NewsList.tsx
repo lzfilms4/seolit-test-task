@@ -1,16 +1,27 @@
 import { useState } from "react"
-import { useNewsStore, NewsItem } from "../store/news.store"
+
 import { Button } from "./ui/button"
+
 import NewsCard from "./NewsCard"
 import NewsDialog from "./NewsDialog"
 
+import { useNewsStore, NewsItem } from "../store/news.store"
+
 export default function NewsList() {
-    const { news, deleteNews } = useNewsStore()
+    const { news, deleteNews, addNews, updateNews } = useNewsStore()
 
     // NewsItem - editing, null - new, undefined - closed
     const [editingNews, setEditingNews] = useState<NewsItem | null | undefined>(
         undefined
     )
+
+    const handleSubmit = (title: string, content: string) => {
+        if (editingNews) {
+            updateNews(editingNews.id, title, content)
+        } else {
+            addNews(title, content)
+        }
+    }
 
     const handleEdit = (newsItem: NewsItem) => {
         setEditingNews(newsItem)
@@ -38,6 +49,7 @@ export default function NewsList() {
             <NewsDialog
                 newsItem={editingNews}
                 isOpen={editingNews !== undefined}
+                onSubmit={handleSubmit}
                 onClose={handleCloseDialog}
             />
 
